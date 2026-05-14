@@ -8,6 +8,7 @@ import type { Order } from "./types/order";
 import { orderSchema } from "./schemas/order";
 import { matchOrder } from "./engine/matchOrder";
 import { USERS, STOCKS, ORDERS, BALANCES, ORDERBOOK } from "./store/strore";
+
 const app = express();
 
 app.use(express.json());
@@ -104,7 +105,13 @@ app.post("/order", authMiddleware, (req, res) => {
 
     const symbol = stock.symbol;
 
-    const orderbook = ORDERBOOK[symbol];
+    const orderBook = ORDERBOOK[symbol];
+
+    if (!orderBook) {
+        return res.json({
+            message: "Orderbook not found"
+        });
+    }
 
     if (type === "LIMIT" && typeof price !== "number") {
         return res.status(400).json({
@@ -181,7 +188,7 @@ app.post("/order", authMiddleware, (req, res) => {
 
         const limitOrderPrice = price!
         
-        const bookSide = side === "BUY" ? orderbook.bids : orderbook.asks;
+        const bookSide = side === "BUY" ? orderBook.bids : orderBook.asks;
 
         if (!bookSide[limitOrderPrice]) {
             bookSide[limitOrderPrice] = {

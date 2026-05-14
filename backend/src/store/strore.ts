@@ -3,7 +3,6 @@ import type { Order } from "../types/order";
 import type { UserBalance } from "../types/balance";
 import type { OrderBookSide } from "../types/orderbook";
 import type { Fill } from "../types/fills";
-import type { StockSymbol } from "../types/stock";
 
 
 // --- In-memory state ---
@@ -16,7 +15,7 @@ export const STOCKS = [
 export const ORDERS: Order[] = [];
 export const FILLS: Fill[] = [];
 export const BALANCES: Record<number, UserBalance> = {}; // { userId: { INR: {available, locked}, AXIS: {available, locked}, ... } }
-export const ORDERBOOK: Record<StockSymbol, OrderBookSide> = {
+export const ORDERBOOK: Record<string, OrderBookSide> = {
   AXIS: { bids: {}, asks: {} },
   HDFC: { bids: {}, asks: {} },
   TATA: { bids: {}, asks: {} },

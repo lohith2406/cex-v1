@@ -12,6 +12,10 @@ export function matchOrder(order: Order) {
 
     const orderBook = ORDERBOOK[symbol];
 
+    if (!orderBook) {
+        throw new Error("Orderbook not found");
+    }
+
     const oppositeSide = order.side === "BUY" ? orderBook.asks : orderBook.bids;
     const prices = Object.keys(oppositeSide).map((key) => Number(key));
     prices.sort((a, b) => order.side === "BUY" ? a - b : b- a);
@@ -72,6 +76,13 @@ export function matchOrder(order: Order) {
             buyerBalances[symbol]!.available += tradeQty;
             buyerBalances["INR"]!.locked -= tradeValue;
 
+            if (order.side === "BUY" && order.type === "LIMIT" && typeof order.price === "number") {
+                const refund = (order.price - price) * tradeQty;
+
+                buyerBalances["INR"]!.available += refund;
+                buyerBalances["INR"]!.locked -= refund;
+            }
+
             sellerBalances["INR"]!.available += tradeValue;
             sellerBalances[symbol]!.locked -= tradeQty;
 
@@ -99,11 +110,7 @@ export function matchOrder(order: Order) {
                 restingOrder.status = "PARTIALLY_FILLED";
             }
 
-            if (remainingQty === 0) {
-                order.status = "FILLED";
-            } else {
-                order.status = "PARTIALLY_FILLED";
-            }
+            order.status = remainingQty === 0 ? "FILLED" : "PARTIALLY_FILLED";
         }
 
         priceLevel.orders = ordersAtPrice.filter((order) => order.status !== "FILLED");
