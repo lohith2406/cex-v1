@@ -1,15 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
-interface AuthRequest extends Request {
-    userId?: number
-}
-
-export function authMiddleware(req: AuthRequest, res: Response, next: NextFunction) {
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        return res.json({
+        return res.status(401).json({
             message: "Auth header missing"
         });
     }
@@ -33,7 +29,7 @@ export function authMiddleware(req: AuthRequest, res: Response, next: NextFuncti
         req.userId = decoded.userId;
         next();
     } catch (err) {
-        return res.json({
+        return res.status(401).json({
             message: "Invalid token"
         })
     }
