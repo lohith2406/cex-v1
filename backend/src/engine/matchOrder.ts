@@ -1,5 +1,6 @@
 import { BALANCES, STOCKS, FILLS, ORDERBOOK } from "../store/strore";
 import type { Order } from "../types/order";
+import { nextId } from "../utils/id";
 
 export function matchOrder(order: Order) {
     const stock = STOCKS.find(stock => stock.id === order.stockId);
@@ -95,7 +96,7 @@ export function matchOrder(order: Order) {
             const sellOrderId = order.side === "SELL" ? order.id : restingOrder.id;
 
             FILLS.push({
-                id: Date.now(),
+                id: nextId(),
                 stockId: order.stockId,
                 price,
                 qty: tradeQty,
