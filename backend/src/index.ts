@@ -1,5 +1,5 @@
 import express from "express";
-import authRoutes from "./src/routes/authRoutes";
+import authRoutes from "./routes/authRoutes";
 const app = express();
 
 app.use(express.json());
@@ -32,17 +32,33 @@ app.post("/order", (req, res) => {
     returns the status of an order (partially filled, success, cancellled)
     ALSO RETURNS THE INDIVIDUAL FILLS OF THIS ORDER 
 */
-app.get("/order/:orderId")
-app.delete("/order/:orderId")
-app.get("/depth/:symbol");
-app.get("/orders");
-app.get("/fills");
+app.get("/order/:orderId", (req, res) => {
 
-app.get("/balance/usd");
+})
+app.delete("/order/:orderId", (req, res) => {
+    
+})
+app.get("/depth/:symbol", (req, res) => {
+    
+});
+app.get("/orders", (req, res) => {
+    
+});
+app.get("/fills", (req, res) => {
+    
+});
+
+app.get("/balance/usd", (req, res) => {
+    
+});
 
 /*  
     Returns the balance of all stocks
 */
-app.get("/balance")
+app.get("/balance", (req, res) => {
+    
+})
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.log("Server running on 3000");
+});
