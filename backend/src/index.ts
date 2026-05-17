@@ -2,58 +2,21 @@ import express from "express";
 import authRoutes from "./routes/authRoutes";
 import marketRoutes from "./routes/marketRoutes";
 import balanceRoutes from "./routes/balanceRoutes";
+import orderRoutes from "./routes/orderRoutes";
+import fillRoutes from "./routes/fillRoutes";
 const app = express();
 
 app.use(express.json());
 
-app.use("/", authRoutes);
+app.use("/auth", authRoutes);
 
-/*
-    body = {
-        type:           "market" | "limit",
-        price:          number | null,
-        qty:            number,
-        market_id:      string,
-        side:           "buy" | "sell"
-    }
+app.use("/orders", orderRoutes);
 
-    @returns {
-        orderId: string,
-        filledQty: number,
-        averagePrice
-    }
-*/
+app.use("/market", marketRoutes);
 
-// 50.01
+app.use("/fills", fillRoutes);
 
-// 500001
-app.post("/order", (req, res) => {
-
-})
-/*
-    returns the status of an order (partially filled, success, cancellled)
-    ALSO RETURNS THE INDIVIDUAL FILLS OF THIS ORDER 
-*/
-app.get("/order/:orderId", (req, res) => {
-
-})
-app.delete("/order/:orderId", (req, res) => {
-    
-})
-app.get("/", marketRoutes);
-
-app.get("/orders", (req, res) => {
-    
-});
-app.get("/fills", (req, res) => {
-    
-});
-
-
-/*  
-    Returns the balance of all stocks
-*/
-app.get("/balance", balanceRoutes)
+app.use("/balance", balanceRoutes)
 
 app.listen(3000, () => {
     console.log("Server running on 3000");
