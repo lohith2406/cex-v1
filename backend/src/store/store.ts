@@ -1,7 +1,7 @@
 import type { Balance } from "../types/balance"
 import type { Orderbook } from "../types/orderbook"
 
-const BALANCES: Record<string, Balance> = {
+export const BALANCES: Record<number, Record<string, Balance>> = {
     /*
    userId: {
        INR: {
@@ -17,7 +17,7 @@ const BALANCES: Record<string, Balance> = {
    */
 }
 
-const ORDERBOOKS: Record<string, Orderbook> = {
+export const ORDERBOOKS: Record<string, Orderbook> = {
    SOL: {
        bids: [],
        asks: [],

@@ -21,8 +21,8 @@ async function main() {
                 symbol: "SOL"
             },
             {
-                name: "Indian Rupee",
-                symbol: "INR"
+                name: "US Dollar",
+                symbol: "USD"
             }
         ],
         skipDuplicates: true,

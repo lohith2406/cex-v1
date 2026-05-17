@@ -1,5 +1,7 @@
 import express from "express";
 import authRoutes from "./routes/authRoutes";
+import marketRoutes from "./routes/marketRoutes";
+import balanceRoutes from "./routes/balanceRoutes";
 const app = express();
 
 app.use(express.json());
@@ -38,9 +40,8 @@ app.get("/order/:orderId", (req, res) => {
 app.delete("/order/:orderId", (req, res) => {
     
 })
-app.get("/depth/:symbol", (req, res) => {
-    
-});
+app.get("/", marketRoutes);
+
 app.get("/orders", (req, res) => {
     
 });
@@ -48,16 +49,11 @@ app.get("/fills", (req, res) => {
     
 });
 
-app.get("/balance/usd", (req, res) => {
-    
-});
 
 /*  
     Returns the balance of all stocks
 */
-app.get("/balance", (req, res) => {
-    
-})
+app.get("/balance", balanceRoutes)
 
 app.listen(3000, () => {
     console.log("Server running on 3000");

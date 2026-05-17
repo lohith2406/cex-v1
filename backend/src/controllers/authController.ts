@@ -3,6 +3,7 @@ import { prisma } from "../db";
 import { authSchema } from "../schema/authSchema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
+import { BALANCES } from "../store/store";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -38,6 +39,13 @@ export async function signup(req: Request, res: Response) {
             password: hashedPassword
         }
     });
+
+    BALANCES[user.id] = {
+        USD: {
+            available: 0n,
+            locked: 0n
+        }
+    };
 
     const token = jwt.sign({
         userId: user.id
