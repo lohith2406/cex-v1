@@ -31,13 +31,13 @@ export function getAssetBalance(req: Request, res: Response) {
         });
     }
 
-    const balance = userBalances[asset];
+    const assetBalance = userBalances[asset];
 
-    if (!balance) {
+    if (!assetBalance) {
         return res.status(404).json({
             message: "No balance found for this asset"
         });
     }
 
-    return res.json(balance)
+    return res.json(assetBalance);
 }
