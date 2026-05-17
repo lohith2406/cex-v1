@@ -4,6 +4,8 @@ import { authSchema } from "../schema/authSchema";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 
+const JWT_SECRET = process.env.JWT_SECRET!;
+
 export async function signup(req: Request, res: Response) {
     const parsedBody = authSchema.safeParse(req.body);
 
@@ -30,12 +32,16 @@ export async function signup(req: Request, res: Response) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
         data: {
             username,
             password: hashedPassword
         }
     });
+
+    const token = jwt.sign({
+        userId: user.id
+    }, JWT_SECRET);
 
     return res.status(201).json({
         message: "Successfully signed up!"
@@ -75,12 +81,9 @@ export async function signin(req: Request, res: Response) {
         });
     }
 
-    const token = jwt.sign(
-        {
-            userId: user.id
-        }, 
-        process.env.JWT_SECRET!
-    );
+    const token = jwt.sign({
+        userId: user.id
+    }, JWT_SECRET);
 
     return res.json({
         token
