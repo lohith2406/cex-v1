@@ -44,7 +44,8 @@ export async function signup(req: Request, res: Response) {
     }, JWT_SECRET);
 
     return res.status(201).json({
-        message: "Successfully signed up!"
+        message: "Successfully signed up!",
+        token
     });
 }
 
