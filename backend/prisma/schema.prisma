@@ -29,24 +29,21 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum FillType {
-  MAKER
-  TAKER
-}
-
 model User {
   id              Int      @id @default(autoincrement())
   username        String   @unique
   password        String
 
   orders          Order[]
-  fills           Fill[]
 }
 
 model Asset {
   id            Int       @id @default(autoincrement())
-  name          String
+  title         String
   symbol        String    @unique
+
+  orders        Order[]
+  fills         Fill[]
 }
 
 model Order {
@@ -55,7 +52,11 @@ model Order {
   userId              Int
   user                User          @relation(fields: [userId], references: [id])
 
-  market              String
+  side                OrderSide
+  type                OrderType
+
+  assetId             Int
+  asset               Asset         @relation(fields: [assetId], references: [id])
 
   price               BigInt?
 
@@ -63,14 +64,12 @@ model Order {
   filledQuantity      BigInt
   remainingQuantity   BigInt
 
-  type                OrderType
-  side                OrderSide
-
   status              OrderStatus
 
   createdAt           DateTime      @default(now())
 
-  fills               Fill[]
+  buyFills            Fill[]        @relation("BuyOrderFills")
+  sellFills           Fill[]        @relation("SellOrderFills")
 
 }
 
@@ -79,19 +78,16 @@ model Fill {
   
   quantity            BigInt
 
-  side                OrderSide
-
-  type                FillType
-
-  userId              Int
-  user                User          @relation(fields: [userId], references: [id])
-
   price               BigInt
 
-  market              String
+  assetId             Int
+  asset               Asset        @relation(fields: [assetId], references: [id])
 
-  orderId             Int
-  order               Order         @relation(fields: [orderId], references: [id])
+  buyOrderId          Int
+  buyOrder            Order        @relation("BuyOrderFills", fields: [buyOrderId], references: [id])
 
-  createdAt           DateTime      @default(now())
+  sellOrderId         Int
+  sellOrder           Order        @relation("SellOrderFills", fields: [sellOrderId], references: [id])
+
+  createdAt           DateTime     @default(now())
 }

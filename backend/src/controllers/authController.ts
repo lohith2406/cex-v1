@@ -40,8 +40,18 @@ export async function signup(req: Request, res: Response) {
         }
     });
 
+    const inrAsset = await prisma.asset.findUnique({
+        where: {
+            symbol: "INR"
+        }
+    });
+
+    if (!inrAsset) {
+        throw new Error("INR asset not seeded");
+    }
+
     BALANCES[user.id] = {
-        USD: {
+        [inrAsset.id]: {
             available: 0n,
             locked: 0n
         }

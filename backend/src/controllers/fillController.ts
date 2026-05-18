@@ -6,7 +6,18 @@ export async function getFills(req: Request, res: Response) {
 
     const fills = await prisma.fill.findMany({
         where: {
-            userId
+            OR: [
+                {
+                    buyOrder: {
+                        userId
+                    }
+                },
+                {
+                    sellOrder: {
+                        userId
+                    }
+                }
+            ]
         },
         orderBy: {
             createdAt: "desc"

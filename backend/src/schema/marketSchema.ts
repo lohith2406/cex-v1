@@ -1,5 +1,5 @@
 import z from "zod";
 
 export const depthSchema = z.object({
-    symbol: z.string()
+    assetId: z.coerce.number()
 });

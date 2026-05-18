@@ -7,9 +7,6 @@ CREATE TYPE "OrderSide" AS ENUM ('BUY', 'SELL');
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('OPEN', 'PARTIALLY_FILLED', 'FILLED', 'CANCELLED');
 
--- CreateEnum
-CREATE TYPE "FillType" AS ENUM ('MAKER', 'TAKER');
-
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -22,7 +19,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Asset" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "symbol" TEXT NOT NULL,
 
     CONSTRAINT "Asset_pkey" PRIMARY KEY ("id")
@@ -32,13 +29,13 @@ CREATE TABLE "Asset" (
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "market" TEXT NOT NULL,
+    "side" "OrderSide" NOT NULL,
+    "type" "OrderType" NOT NULL,
+    "assetId" INTEGER NOT NULL,
     "price" BIGINT,
     "quantity" BIGINT NOT NULL,
     "filledQuantity" BIGINT NOT NULL,
     "remainingQuantity" BIGINT NOT NULL,
-    "type" "OrderType" NOT NULL,
-    "side" "OrderSide" NOT NULL,
     "status" "OrderStatus" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -49,12 +46,10 @@ CREATE TABLE "Order" (
 CREATE TABLE "Fill" (
     "id" SERIAL NOT NULL,
     "quantity" BIGINT NOT NULL,
-    "side" "OrderSide" NOT NULL,
-    "type" "FillType" NOT NULL,
-    "userId" INTEGER NOT NULL,
     "price" BIGINT NOT NULL,
-    "market" TEXT NOT NULL,
-    "orderId" INTEGER NOT NULL,
+    "assetId" INTEGER NOT NULL,
+    "buyOrderId" INTEGER NOT NULL,
+    "sellOrderId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Fill_pkey" PRIMARY KEY ("id")
@@ -70,7 +65,13 @@ CREATE UNIQUE INDEX "Asset_symbol_key" ON "Asset"("symbol");
 ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Fill" ADD CONSTRAINT "Fill_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Fill" ADD CONSTRAINT "Fill_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Fill" ADD CONSTRAINT "Fill_assetId_fkey" FOREIGN KEY ("assetId") REFERENCES "Asset"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Fill" ADD CONSTRAINT "Fill_buyOrderId_fkey" FOREIGN KEY ("buyOrderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Fill" ADD CONSTRAINT "Fill_sellOrderId_fkey" FOREIGN KEY ("sellOrderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

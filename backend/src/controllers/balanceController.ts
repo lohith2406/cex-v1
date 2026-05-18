@@ -19,7 +19,7 @@ export function getAssetBalance(req: Request, res: Response) {
         });
     } 
     
-    const { asset } = parsedParams.data;
+    const { assetId } = parsedParams.data;
     
     const userId = req.userId!;
 
@@ -31,7 +31,7 @@ export function getAssetBalance(req: Request, res: Response) {
         });
     }
 
-    const assetBalance = userBalances[asset];
+    const assetBalance = userBalances[assetId];
 
     if (!assetBalance) {
         return res.status(404).json({

@@ -12,9 +12,9 @@ export function getDepth(req: Request, res: Response) {
         });
     }
 
-    const { symbol } = parsedParams.data;
+    const { assetId } = parsedParams.data;
 
-    const orderbook = ORDERBOOKS[symbol];
+    const orderbook = ORDERBOOKS[assetId];
 
     if (!orderbook) {
         return res.status(404).json({

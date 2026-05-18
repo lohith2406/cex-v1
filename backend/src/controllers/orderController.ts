@@ -28,7 +28,8 @@ export async function getOrder(req: Request, res: Response) {
             userId
         },
         include: {
-            fills: true
+            buyFills: true,
+            sellFills: true
         }
     });
 

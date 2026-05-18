@@ -13,19 +13,19 @@ async function main() {
     await prisma.asset.createMany({
         data: [
             {
-                name: "Bitcoin",
+                title: "Bitcoin",
                 symbol: "BTC"
             },
             {
-                name: "Solana",
+                title: "Solana",
                 symbol: "SOL"
             },
             {
-                name: "US Dollar",
-                symbol: "USD"
+                title: "Indian Rupee",
+                symbol: "INR"
             }
         ],
-        skipDuplicates: true,
+        skipDuplicates: true
     })
 }
 
