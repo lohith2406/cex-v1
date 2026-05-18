@@ -6,7 +6,7 @@ import { assetBalanceSchema } from "../schema/balanceSchema";
 export function getBalances(req: Request, res: Response) {
     const userId = req.userId!;
 
-    return res.json(BALANCES[userId]);
+    return res.json(BALANCES[userId] ?? {});
 }
 
 export function getAssetBalance(req: Request, res: Response) {
